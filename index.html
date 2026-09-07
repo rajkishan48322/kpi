@@ -1,0 +1,1227 @@
+<title>KPI Prototype — UIIC</title>
+<style>
+  :root {
+    --navy-900: #0c2340;
+    --navy-800: #123057;
+    --navy-700: #1b3f6e;
+    --navy-600: #2a5490;
+    --gold: #b8862f;
+    --gold-light: #f3e6cc;
+    --slate-25: #f7f8fa;
+    --slate-50: #f1f3f6;
+    --slate-100: #e7eaef;
+    --slate-300: #cdd4dd;
+    --slate-500: #6b7684;
+    --slate-700: #38424f;
+    --ink: #1a2331;
+    --white: #ffffff;
+    --danger: #b3413a;
+    --danger-bg: #fbebe9;
+    --warn: #a8710a;
+    --warn-bg: #fdf3e0;
+    --ok: #1c7d4f;
+    --ok-bg: #e6f5ec;
+    --info: #2455a4;
+    --info-bg: #e9f0fb;
+    --pending: #5c6774;
+    --pending-bg: #eef0f3;
+    --shadow-sm: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+    --shadow-md: 0 4px 10px rgba(12,35,64,.07), 0 1px 3px rgba(12,35,64,.08);
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--slate-25);
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell { display: flex; min-height: 100vh; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: 248px;
+    flex: 0 0 248px;
+    background: linear-gradient(180deg, var(--navy-900) 0%, #0a1c33 100%);
+    color: #dbe4f0;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 20px 18px 18px 18px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--gold) 0%, #8f671f 100%);
+    color: #241a06;
+    font-weight: 800;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: -0.02em;
+    flex: 0 0 auto;
+  }
+  .brand-title { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.25; }
+  .brand-sub { font-size: 10.5px; color: #96a7c0; line-height: 1.3; margin-top: 1px; }
+
+  nav.side-nav {
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  nav.side-nav .nav-group-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #6f81a0;
+    padding: 14px 12px 6px 12px;
+    font-weight: 700;
+  }
+  nav.side-nav .nav-group-label:first-child { padding-top: 4px; }
+  nav.side-nav a {
+    color: #c3cee0;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 12px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-left: 3px solid transparent;
+  }
+  nav.side-nav a .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #4c5c78; flex: 0 0 auto;
+  }
+  nav.side-nav a:hover { background: rgba(255,255,255,.06); color: #fff; }
+  nav.side-nav a.active {
+    background: rgba(184,134,47,.14);
+    color: #fff;
+    font-weight: 700;
+    border-left: 3px solid var(--gold);
+  }
+  nav.side-nav a.active .dot { background: var(--gold); }
+
+  .sidebar-foot {
+    padding: 12px 18px 16px 18px;
+    font-size: 10.5px;
+    color: #6f81a0;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+
+  /* ---------- Content column ---------- */
+  .content-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  header.topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--slate-100);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header.topbar .crumb {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy-900);
+    letter-spacing: -0.01em;
+  }
+  header.topbar .crumb .crumb-eyebrow {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--slate-500);
+    margin-bottom: 2px;
+  }
+  .env-chip {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    background: var(--gold-light);
+    padding: 5px 12px;
+    border-radius: 999px;
+    letter-spacing: .02em;
+  }
+
+  main { flex: 1; padding: 26px 28px 40px 28px; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--slate-100);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+  h2.screen-title {
+    margin: 0 0 5px 0;
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--navy-900);
+    letter-spacing: -0.01em;
+  }
+  p.screen-desc {
+    margin: 0 0 18px 0;
+    font-size: 12.75px;
+    color: var(--slate-500);
+    line-height: 1.55;
+    max-width: 680px;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td {
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--slate-100);
+  }
+  th {
+    background: var(--slate-25);
+    font-weight: 700;
+    color: var(--slate-700);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    border-top: 1px solid var(--slate-100);
+    border-bottom: 1px solid var(--slate-100);
+  }
+  tbody tr:hover td { background: var(--slate-25); }
+  .row-actions button { margin-right: 6px; }
+
+  button, .btn {
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--slate-300);
+    background: var(--white);
+    color: var(--slate-700);
+    cursor: pointer;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  button:hover { background: var(--slate-50); }
+  button.primary {
+    background: var(--navy-900);
+    border-color: var(--navy-900);
+    color: #fff;
+  }
+  button.primary:hover { background: var(--navy-800); }
+  button.primary:disabled {
+    background: var(--slate-300);
+    border-color: var(--slate-300);
+    cursor: not-allowed;
+  }
+  button.danger { color: var(--danger); border-color: #e3b6b1; background: var(--white); }
+  button.danger:hover { background: var(--danger-bg); }
+  button.small { padding: 4px 10px; font-size: 11.5px; border-radius: 6px; }
+
+  input, select, textarea {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--slate-300);
+    border-radius: 7px;
+    width: 100%;
+    color: var(--ink);
+    background: var(--white);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--navy-600);
+    box-shadow: 0 0 0 3px rgba(42,84,144,.14);
+  }
+  input:disabled { background: var(--slate-25); color: var(--slate-500); }
+
+  label {
+    display: block;
+    font-size: 10.5px;
+    color: var(--slate-500);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    font-weight: 700;
+    margin-bottom: 5px;
+    margin-top: 12px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0 16px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px 3px 8px;
+    border-radius: 999px;
+    letter-spacing: .01em;
+  }
+  .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
+  .badge.pending { background: var(--pending-bg); color: var(--pending); }
+  .badge.pending::before { background: var(--pending); }
+  .badge.submitted { background: var(--info-bg); color: var(--info); }
+  .badge.submitted::before { background: var(--info); }
+  .badge.accepted { background: var(--ok-bg); color: var(--ok); }
+  .badge.accepted::before { background: var(--ok); }
+  .badge.rejected { background: var(--danger-bg); color: var(--danger); }
+  .badge.rejected::before { background: var(--danger); }
+
+  .total-ok { color: var(--ok); font-weight: 700; }
+  .total-bad { color: var(--danger); font-weight: 700; }
+  .muted { color: var(--slate-500); font-size: 12px; }
+
+  .kpa-tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .kpa-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--navy-700);
+    background: var(--slate-50);
+    border: 1px solid var(--slate-100);
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .kpa-tag b { color: var(--gold); font-weight: 700; }
+
+  .warn-box {
+    background: var(--warn-bg);
+    border: 1px solid #ecd39b;
+    color: var(--warn);
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    margin-bottom: 12px;
+  }
+
+  .person-block {
+    border: 1px solid var(--slate-100);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .person-block .person-head {
+    background: var(--slate-25);
+    padding: 11px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    border-bottom: 1px solid var(--slate-100);
+  }
+  .person-head b { color: var(--navy-900); font-size: 13.5px; }
+  .person-block table th, .person-block table td { border-left: none; border-right: none; }
+  .person-block table { border: none; }
+
+  .band-ref-table td, .band-ref-table th { font-size: 11.5px; padding: 5px 8px; }
+  .inline-form-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 8px; flex-wrap: wrap; }
+  .inline-form-row > div { flex: 1; min-width: 130px; }
+  .section-divider { border: none; border-top: 1px solid var(--slate-100); margin: 18px 0; }
+
+  .score-final {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--navy-900);
+    background: linear-gradient(135deg, var(--gold-light) 0%, #fbf5e9 100%);
+    border: 1px solid #ecd39b;
+    padding: 14px 20px;
+    border-radius: var(--radius);
+    margin-top: 16px;
+  }
+  .score-final .score-note { font-size: 12px; font-weight: 600; color: var(--warn); }
+</style>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">KPI</div>
+      <div>
+        <div class="brand-title">KPI Workbench</div>
+        <div class="brand-sub">United India Insurance Co. Ltd.</div>
+      </div>
+    </div>
+    <nav class="side-nav" id="navTabs"></nav>
+    <div class="sidebar-foot">Prototype build — all data stored locally in this browser only.</div>
+  </aside>
+  <div class="content-col">
+    <header class="topbar">
+      <div class="crumb"><span class="crumb-eyebrow">KPI Approach</span><span id="crumbTitle">Departments</span></div>
+      <div class="env-chip">Prototype Environment</div>
+    </header>
+    <main><div id="app"></div></main>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================= DATA LAYER ============================= */
+
+const DB_KEYS = {
+  roles: "kpi_roles",
+  kpas: "kpi_kpas",
+  departments: "kpi_departments",
+  matrix: "kpi_matrix",
+  employees: "kpi_employees",
+  targets: "kpi_targets",
+  wao: "kpi_workallocationorders",
+};
+
+const DB = {
+  all(table) {
+    try { return JSON.parse(localStorage.getItem(DB_KEYS[table])) || []; }
+    catch (e) { return []; }
+  },
+  save(table, rows) {
+    localStorage.setItem(DB_KEYS[table], JSON.stringify(rows));
+  },
+  find(table, id) {
+    return DB.all(table).find(r => r.id === id) || null;
+  },
+  upsert(table, row) {
+    const rows = DB.all(table);
+    const idx = rows.findIndex(r => r.id === row.id);
+    if (idx >= 0) rows[idx] = row; else rows.push(row);
+    DB.save(table, rows);
+  },
+  remove(table, id) {
+    DB.save(table, DB.all(table).filter(r => r.id !== id));
+  },
+};
+
+function uid(prefix) {
+  return prefix + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function esc(s) {
+  if (s === null || s === undefined) return "";
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+/* ============================= SEED DATA ============================= */
+
+function seedIfEmpty() {
+  if (DB.all("roles").length) return; // already seeded
+
+  DB.save("roles", [
+    { id: "r1", name: "Marketing Officer", type: "Fixed", description: "Handles business development, premium growth targets." },
+    { id: "r2", name: "Claims Officer", type: "Fixed", description: "Handles claim settlement and turnaround time." },
+  ]);
+
+  const bandTemplate = [
+    { id: uid("b"), label: "At Target", minDelta: 0, maxDelta: 0, mark: 90 },
+    { id: uid("b"), label: "Slightly below", minDelta: -1, maxDelta: -0.01, mark: 80 },
+    { id: uid("b"), label: "Further below", minDelta: -2, maxDelta: -1.01, mark: 70 },
+    { id: uid("b"), label: "Well below (floor)", minDelta: null, maxDelta: -2.01, mark: 50 },
+    { id: uid("b"), label: "Slightly above", minDelta: 0.01, maxDelta: 1, mark: 95 },
+    { id: uid("b"), label: "Well above (ceiling)", minDelta: 1.01, maxDelta: null, mark: 100 },
+  ];
+  DB.save("kpas", [
+    {
+      id: "k1", code: "KPI-001", name: "Premium Growth %", definition: "Growth in premium booked vs. same period last year.",
+      unit: "%", direction: "higher-better", source: "GC",
+      bands: bandTemplate.map(b => ({ ...b, id: uid("b") })),
+    },
+    {
+      id: "k2", code: "KPI-002", name: "Average OD Claims TAT", definition: "Average turnaround time to settle Own Damage claims.",
+      unit: "days", direction: "lower-better", source: "WB",
+      bands: bandTemplate.map(b => ({ ...b, id: uid("b") })),
+    },
+  ]);
+
+  DB.save("departments", [
+    { id: "d1", name: "Marketing" },
+    { id: "d2", name: "Claims" },
+  ]);
+
+  DB.save("matrix", [
+    { id: "m1", roleId: "r1", kpaId: "k1", weightagePct: 60 },
+    { id: "m2", roleId: "r1", kpaId: "k2", weightagePct: 40 },
+    { id: "m3", roleId: "r2", kpaId: "k2", weightagePct: 100 },
+  ]);
+
+  DB.save("employees", [
+    { id: "e1a", empCode: "EMP1001", name: "A. Sharma", departmentId: "d1", officeCode: "RO-CHN", roleId: "r1", kpaId: "k1", weightagePct: 60, startDate: "2026-04-01", endDate: null },
+    { id: "e1b", empCode: "EMP1001", name: "A. Sharma", departmentId: "d1", officeCode: "RO-CHN", roleId: "r1", kpaId: "k2", weightagePct: 40, startDate: "2026-04-01", endDate: null },
+    { id: "e2a", empCode: "EMP1002", name: "R. Iyer", departmentId: "d2", officeCode: "BO-CBE", roleId: "r2", kpaId: "k2", weightagePct: 100, startDate: "2026-04-01", endDate: null },
+    { id: "e3a", empCode: "EMP1003", name: "P. Nair", departmentId: "d2", officeCode: "BO-CBE", roleId: "r2", kpaId: "k2", weightagePct: 50, startDate: "2026-04-01", endDate: null },
+    { id: "e3b", empCode: "EMP1003", name: "P. Nair", departmentId: "d1", officeCode: "BO-CBE", roleId: "r1", kpaId: "k1", weightagePct: 30, startDate: "2026-04-01", endDate: null },
+    { id: "e3c", empCode: "EMP1003", name: "P. Nair", departmentId: "d1", officeCode: "BO-CBE", roleId: "r1", kpaId: "k2", weightagePct: 20, startDate: "2026-04-01", endDate: null },
+  ]);
+
+  DB.save("targets", [
+    { id: "t1", employeeId: "e1a", period: "2026-07", targetValue: 10, setBy: "RO Marketing Head" },
+    { id: "t2", employeeId: "e1b", period: "2026-07", targetValue: 7, setBy: "RO Marketing Head" },
+    { id: "t3", employeeId: "e2a", period: "2026-07", targetValue: 7, setBy: "RO Claims Head" },
+    { id: "t4", employeeId: "e3a", period: "2026-07", targetValue: 6, setBy: "RO Claims Head" },
+    { id: "t5", employeeId: "e3b", period: "2026-07", targetValue: 12, setBy: "RO Marketing Head" },
+  ]);
+
+  DB.save("wao", [
+    { id: "w0", employeeId: "e1b", period: "2026-07", targetValue: 7, weightagePct: 40, actualValue: null, submittedDate: null, mark: null, acceptedBy: null, acceptedDate: null, status: "Pending Entry" },
+    { id: "w1", employeeId: "e1a", period: "2026-07", targetValue: 10, weightagePct: 60, actualValue: 11, submittedDate: "2026-07-28", mark: 95, acceptedBy: "RO Marketing Head", acceptedDate: "2026-07-30", status: "Accepted" },
+    { id: "w2", employeeId: "e2a", period: "2026-07", targetValue: 7, weightagePct: 100, actualValue: 6.5, submittedDate: "2026-07-27", mark: 95, acceptedBy: "RO Claims Head", acceptedDate: "2026-07-29", status: "Accepted" },
+    { id: "w3", employeeId: "e3a", period: "2026-07", targetValue: 6, weightagePct: 50, actualValue: 6, submittedDate: "2026-07-26", mark: 90, acceptedBy: "RO Claims Head", acceptedDate: "2026-07-29", status: "Accepted" },
+    { id: "w4", employeeId: "e3b", period: "2026-07", targetValue: 12, weightagePct: 30, actualValue: 13, submittedDate: "2026-07-28", mark: 95, acceptedBy: "RO Marketing Head", acceptedDate: "2026-07-30", status: "Accepted" },
+  ]);
+}
+
+/* ============================= MARKING SCALE (reference only) ============================= */
+
+const MarkingScale = {
+  suggestedMark(kpa, targetValue, actualValue) {
+    if (!kpa || targetValue === null || targetValue === undefined || actualValue === null || actualValue === undefined || isNaN(actualValue)) return null;
+    const delta = kpa.direction === "higher-better" ? (actualValue - targetValue) : (targetValue - actualValue);
+    for (const band of kpa.bands) {
+      const minOk = band.minDelta === null || band.minDelta === undefined || delta >= band.minDelta;
+      const maxOk = band.maxDelta === null || band.maxDelta === undefined || delta <= band.maxDelta;
+      if (minOk && maxOk) return band.mark;
+    }
+    return null;
+  },
+};
+
+/* ============================= LOOKUP HELPERS ============================= */
+
+function roleName(id) { const r = DB.find("roles", id); return r ? r.name : "(unknown role)"; }
+function kpaById(id) { return DB.find("kpas", id); }
+function kpaName(id) { const k = kpaById(id); return k ? k.name : "(unknown KPA)"; }
+function kpaCode(id) { const k = kpaById(id); return k ? k.code : "?"; }
+function deptName(id) { const d = DB.find("departments", id); return d ? d.name : "(unknown dept)"; }
+function empRow(id) { return DB.find("employees", id); }
+function empLabel(row) {
+  if (!row) return "(unknown)";
+  return `${row.empCode} — ${row.name} — ${roleName(row.roleId)} — ${kpaName(row.kpaId)}`;
+}
+
+function statusBadge(status) {
+  const cls = { "Pending Entry": "pending", "Submitted": "submitted", "Accepted": "accepted", "Rejected": "rejected" }[status] || "pending";
+  return `<span class="badge ${cls}">${esc(status)}</span>`;
+}
+
+/* ============================= ROUTER ============================= */
+
+const ROUTES = [
+  { hash: "#/departments", label: "Departments", group: "Setup", render: renderDepartments },
+  { hash: "#/roles", label: "Roles", group: "Setup", render: renderRoles },
+  { hash: "#/kpas", label: "KPAs", group: "Setup", render: renderKpas },
+  { hash: "#/matrix", label: "Role–KPA Matrix", group: "Setup", render: renderMatrix },
+  { hash: "#/employees", label: "Employees", group: "Setup", render: renderEmployees },
+  { hash: "#/targets", label: "Target Fixation", group: "Operations", render: renderTargets },
+  { hash: "#/workbench-entry", label: "Workbench: Actual Entry", group: "Operations", render: renderWorkbenchEntry },
+  { hash: "#/workbench-review", label: "Workbench: Review & Mark", group: "Operations", render: renderWorkbenchReview },
+  { hash: "#/dashboard", label: "KPI Score Dashboard", group: "Reporting", render: renderDashboard },
+];
+
+function buildNav() {
+  const nav = document.getElementById("navTabs");
+  let html = "";
+  let lastGroup = null;
+  ROUTES.forEach(r => {
+    if (r.group !== lastGroup) {
+      html += `<div class="nav-group-label">${esc(r.group)}</div>`;
+      lastGroup = r.group;
+    }
+    html += `<a href="${r.hash}" data-hash="${r.hash}"><span class="dot"></span>${esc(r.label)}</a>`;
+  });
+  nav.innerHTML = html;
+}
+
+function router() {
+  let hash = window.location.hash || ROUTES[0].hash;
+  const route = ROUTES.find(r => r.hash === hash) || ROUTES[0];
+  document.querySelectorAll("nav.side-nav a").forEach(a => {
+    a.classList.toggle("active", a.getAttribute("data-hash") === route.hash);
+  });
+  document.getElementById("crumbTitle").textContent = route.label;
+  document.getElementById("app").innerHTML = "";
+  route.render(document.getElementById("app"));
+}
+
+window.addEventListener("hashchange", router);
+window.addEventListener("DOMContentLoaded", () => {
+  seedIfEmpty();
+  buildNav();
+  router();
+});
+
+/* ============================= SCREEN: DEPARTMENTS ============================= */
+
+function renderDepartments(app) {
+  const rows = DB.all("departments");
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">Departments</h2>
+      <p class="screen-desc">A simple controlled list — used everywhere else instead of free-text department names.</p>
+      <div class="inline-form-row">
+        <div><label>New department name</label><input id="deptNameInput" placeholder="e.g. Underwriting"></div>
+        <div style="flex:0"><button class="primary" onclick="addDepartment()">Add</button></div>
+      </div>
+      <table>
+        <thead><tr><th>ID</th><th>Name</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map(d => `
+            <tr>
+              <td>${esc(d.id)}</td>
+              <td><input value="${esc(d.name)}" onchange="renameDepartment('${d.id}', this.value)"></td>
+              <td class="row-actions"><button class="danger small" onclick="deleteDepartment('${d.id}')">Delete</button></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+function addDepartment() {
+  const val = document.getElementById("deptNameInput").value.trim();
+  if (!val) return;
+  DB.upsert("departments", { id: uid("d"), name: val });
+  router();
+}
+function renameDepartment(id, val) {
+  const d = DB.find("departments", id); if (!d) return;
+  d.name = val; DB.upsert("departments", d);
+}
+function deleteDepartment(id) {
+  if (!confirm("Delete this department?")) return;
+  DB.remove("departments", id); router();
+}
+
+/* ============================= SCREEN: ROLES ============================= */
+
+function renderRoles(app) {
+  const rows = DB.all("roles");
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">Roles</h2>
+      <p class="screen-desc">Job types. A Role's actual KPAs and weights are defined on the Role–KPA Matrix screen.</p>
+      <div class="form-grid">
+        <div><label>Name</label><input id="roleNameInput" placeholder="e.g. Underwriting Officer"></div>
+        <div><label>Type</label>
+          <select id="roleTypeInput"><option>Fixed</option><option>Tailor-made</option></select>
+        </div>
+        <div><label>Description</label><input id="roleDescInput" placeholder="What this role does"></div>
+      </div>
+      <div style="margin-top:10px"><button class="primary" onclick="addRole()">Add role</button></div>
+      <hr class="section-divider">
+      <table>
+        <thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Description</th><th>KPAs attached (Matrix)</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map(r => {
+            const matrixRows = DB.all("matrix").filter(m => m.roleId === r.id);
+            const kpaTags = matrixRows.length === 0
+              ? `<span class="badge rejected">0 — incomplete</span>`
+              : matrixRows.map(m => `<span class="kpa-tag">${esc(kpaName(m.kpaId))} <b>${m.weightagePct}%</b></span>`).join("");
+            return `<tr>
+              <td>${esc(r.id)}</td>
+              <td>${esc(r.name)}</td>
+              <td>${esc(r.type)}</td>
+              <td>${esc(r.description)}</td>
+              <td><div class="kpa-tag-list">${kpaTags}</div></td>
+              <td class="row-actions"><button class="danger small" onclick="deleteRole('${r.id}')">Delete</button></td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+function addRole() {
+  const name = document.getElementById("roleNameInput").value.trim();
+  if (!name) return alert("Name is required.");
+  DB.upsert("roles", {
+    id: uid("r"), name,
+    type: document.getElementById("roleTypeInput").value,
+    description: document.getElementById("roleDescInput").value.trim(),
+  });
+  router();
+}
+function deleteRole(id) {
+  if (!confirm("Delete this role? (Matrix rows referencing it will be orphaned.)")) return;
+  DB.remove("roles", id); router();
+}
+
+/* ============================= SCREEN: KPAs ============================= */
+
+let _kpaBandDraft = null; // { kpaId, bands: [...] } while editing
+
+function renderKpas(app) {
+  const rows = DB.all("kpas");
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">KPAs / Parameters</h2>
+      <p class="screen-desc">Each KPA carries its own dynamic marking-scale bands, used only as a reference — never auto-applied to a mark.</p>
+      <table>
+        <thead><tr><th>ID</th><th>Code</th><th>Name</th><th>Unit</th><th>Direction</th><th>Source</th><th>Bands</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map(k => `
+            <tr>
+              <td>${esc(k.id)}</td>
+              <td>${esc(k.code)}</td>
+              <td>${esc(k.name)}</td>
+              <td>${esc(k.unit)}</td>
+              <td>${esc(k.direction)}</td>
+              <td>${esc(k.source)}</td>
+              <td>${k.bands.length}</td>
+              <td class="row-actions">
+                <button class="small" onclick="editKpaBands('${k.id}')">Edit bands</button>
+                <button class="danger small" onclick="deleteKpa('${k.id}')">Delete</button>
+              </td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2 class="screen-title">Add a new KPA</h2>
+      <div class="form-grid">
+        <div><label>KPI Code (unique)</label><input id="kpaCodeInput" placeholder="e.g. KPI-003"></div>
+        <div><label>Name</label><input id="kpaNameInput" placeholder="e.g. New Policy Count"></div>
+        <div><label>Unit</label><input id="kpaUnitInput" placeholder="%, days, count..."></div>
+        <div><label>Direction</label>
+          <select id="kpaDirInput"><option value="higher-better">higher-better</option><option value="lower-better">lower-better</option></select>
+        </div>
+        <div><label>Source</label>
+          <select id="kpaSourceInput"><option>GC</option><option>WB</option><option>Manual</option></select>
+        </div>
+      </div>
+      <label>Definition / Formula</label><input id="kpaDefInput" placeholder="How is this measured?">
+      <div style="margin-top:10px"><button class="primary" onclick="addKpa()">Add KPA (with a default 6-band scale you can edit after)</button></div>
+    </div>
+    ${_kpaBandDraft ? renderBandEditor() : ""}
+  `;
+  if (_kpaBandDraft) updateBandPreview();
+}
+
+function defaultBands() {
+  return [
+    { id: uid("b"), label: "At Target", minDelta: 0, maxDelta: 0, mark: 90 },
+    { id: uid("b"), label: "Slightly below", minDelta: -1, maxDelta: -0.01, mark: 80 },
+    { id: uid("b"), label: "Slightly above", minDelta: 0.01, maxDelta: 1, mark: 95 },
+  ];
+}
+
+function addKpa() {
+  const code = document.getElementById("kpaCodeInput").value.trim();
+  const name = document.getElementById("kpaNameInput").value.trim();
+  if (!code || !name) return alert("Code and name are required.");
+  if (DB.all("kpas").some(k => k.code === code)) return alert("That KPI Code is already used.");
+  DB.upsert("kpas", {
+    id: uid("k"), code, name,
+    definition: document.getElementById("kpaDefInput").value.trim(),
+    unit: document.getElementById("kpaUnitInput").value.trim(),
+    direction: document.getElementById("kpaDirInput").value,
+    source: document.getElementById("kpaSourceInput").value,
+    bands: defaultBands(),
+  });
+  router();
+}
+function deleteKpa(id) {
+  if (!confirm("Delete this KPA? (Matrix/Employee rows referencing it will be orphaned.)")) return;
+  DB.remove("kpas", id); router();
+}
+
+function editKpaBands(kpaId) {
+  const kpa = kpaById(kpaId);
+  _kpaBandDraft = { kpaId, bands: JSON.parse(JSON.stringify(kpa.bands)) };
+  router();
+}
+function renderBandEditor() {
+  const kpa = kpaById(_kpaBandDraft.kpaId);
+  const bands = _kpaBandDraft.bands;
+  return `
+    <div class="card">
+      <h2 class="screen-title">Editing bands: ${esc(kpa.name)} (${esc(kpa.direction)})</h2>
+      <p class="screen-desc">minDelta/maxDelta are offsets from target in "goodness" terms — positive = better than target. Leave blank for an open-ended floor/ceiling band.</p>
+      <table>
+        <thead><tr><th>Label</th><th>Min Δ</th><th>Max Δ</th><th>Mark</th><th></th></tr></thead>
+        <tbody>
+          ${bands.map((b, i) => `
+            <tr>
+              <td><input value="${esc(b.label)}" onchange="_kpaBandDraft.bands[${i}].label=this.value"></td>
+              <td><input type="number" step="any" value="${b.minDelta === null ? "" : b.minDelta}" placeholder="(open)" onchange="_kpaBandDraft.bands[${i}].minDelta=this.value===''?null:parseFloat(this.value)"></td>
+              <td><input type="number" step="any" value="${b.maxDelta === null ? "" : b.maxDelta}" placeholder="(open)" onchange="_kpaBandDraft.bands[${i}].maxDelta=this.value===''?null:parseFloat(this.value)"></td>
+              <td><input type="number" step="any" value="${b.mark}" onchange="_kpaBandDraft.bands[${i}].mark=parseFloat(this.value)"></td>
+              <td><button class="danger small" onclick="removeBandRow(${i})">Remove</button></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+      <div style="margin-top:10px">
+        <button class="small" onclick="addBandRow()">+ Add band row</button>
+        <button class="primary" onclick="saveBandDraft()">Save bands</button>
+        <button onclick="_kpaBandDraft=null; router();">Cancel</button>
+      </div>
+      <hr class="section-divider">
+      <b>Live preview</b>
+      <div class="inline-form-row" style="margin-top:8px">
+        <div><label>Target value</label><input id="bandPreviewTarget" type="number" step="any" value="10" oninput="updateBandPreview()"></div>
+        <div><label>Actual value</label><input id="bandPreviewActual" type="number" step="any" value="11" oninput="updateBandPreview()"></div>
+        <div><label>Suggested mark</label><input id="bandPreviewResult" disabled></div>
+      </div>
+    </div>
+  `;
+}
+function addBandRow() {
+  _kpaBandDraft.bands.push({ id: uid("b"), label: "New band", minDelta: null, maxDelta: null, mark: 0 });
+  router();
+}
+function removeBandRow(i) {
+  _kpaBandDraft.bands.splice(i, 1);
+  router();
+}
+function saveBandDraft() {
+  const kpa = kpaById(_kpaBandDraft.kpaId);
+  kpa.bands = _kpaBandDraft.bands;
+  DB.upsert("kpas", kpa);
+  _kpaBandDraft = null;
+  router();
+}
+function updateBandPreview() {
+  const t = parseFloat(document.getElementById("bandPreviewTarget").value);
+  const a = parseFloat(document.getElementById("bandPreviewActual").value);
+  const fakeKpa = { direction: kpaById(_kpaBandDraft.kpaId).direction, bands: _kpaBandDraft.bands };
+  const result = MarkingScale.suggestedMark(fakeKpa, t, a);
+  document.getElementById("bandPreviewResult").value = result === null ? "(no matching band)" : result;
+}
+
+/* ============================= SCREEN: MATRIX ============================= */
+
+let _matrixRoleId = null;
+let _matrixDraft = null;   // { roleId, rows: [{id, kpaId, weightagePct}, ...] } — unsaved edits live here
+let _matrixDirty = false;  // true once the draft differs from what's on disk
+
+function loadMatrixDraft(roleId) {
+  const saved = DB.all("matrix").filter(m => m.roleId === roleId);
+  _matrixDraft = { roleId, rows: saved.map(m => ({ ...m })) };
+  _matrixDirty = false;
+}
+
+function renderMatrix(app) {
+  const roles = DB.all("roles");
+  if (!_matrixRoleId && roles.length) _matrixRoleId = roles[0].id;
+  if (!_matrixDraft || _matrixDraft.roleId !== _matrixRoleId) loadMatrixDraft(_matrixRoleId);
+
+  const kpas = DB.all("kpas");
+  const rows = _matrixDraft.rows;
+  const total = rows.reduce((s, m) => s + (parseFloat(m.weightagePct) || 0), 0);
+  const canSave = total === 100;
+
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">Role–KPA Matrix</h2>
+      <p class="screen-desc">This is the template: which KPAs belong to a Role, and how much each is worth. Employees' rows default from here but can be adjusted per person. Edits here are a draft — nothing is saved until you click <b>Save changes</b>.</p>
+      <label>Role</label>
+      <select onchange="switchMatrixRole(this.value)">
+        ${roles.map(r => `<option value="${r.id}" ${r.id === _matrixRoleId ? "selected" : ""}>${esc(r.name)}</option>`).join("")}
+      </select>
+      <hr class="section-divider">
+      ${_matrixDirty ? `<div class="warn-box">You have unsaved changes to this role's Matrix. Click <b>Save changes</b> below to persist them, or <b>Discard</b> to revert.</div>` : ""}
+      <table>
+        <thead><tr><th>KPA</th><th>Weightage %</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map((m, i) => `
+            <tr>
+              <td>${esc(kpaName(m.kpaId))} <span class="muted">(${esc(kpaCode(m.kpaId))})</span></td>
+              <td><input type="number" step="any" value="${m.weightagePct}" oninput="_matrixDraft.rows[${i}].weightagePct=parseFloat(this.value)||0; _matrixDirty=true; router();"></td>
+              <td><button class="danger small" onclick="removeMatrixDraftRow(${i})">Remove</button></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+      <p>Total: <span class="${canSave ? "total-ok" : "total-bad"}">${total}%</span> ${canSave ? "✓" : "— must equal 100% before you can save"}</p>
+      <div class="inline-form-row">
+        <div>
+          <label>Add KPA to this role</label>
+          <select id="matrixAddKpaSelect">
+            ${kpas.filter(k => !rows.some(r => r.kpaId === k.id)).map(k => `<option value="${k.id}">${esc(k.name)}</option>`).join("")}
+          </select>
+        </div>
+        <div style="flex:0"><button onclick="addMatrixDraftRow()">+ Add to draft</button></div>
+      </div>
+      <hr class="section-divider">
+      <div class="inline-form-row" style="margin-bottom:0">
+        <div style="flex:0"><button class="primary" ${(canSave && _matrixDirty) ? "" : "disabled"} onclick="saveMatrixDraft()">${_matrixDirty ? "Save changes" : "Saved ✓"}</button></div>
+        <div style="flex:0"><button ${_matrixDirty ? "" : "disabled"} onclick="loadMatrixDraft(_matrixRoleId); router();">Discard</button></div>
+      </div>
+    </div>`;
+}
+function switchMatrixRole(roleId) {
+  if (_matrixDirty && !confirm("You have unsaved changes on this role's Matrix. Switch roles and discard them?")) return;
+  _matrixRoleId = roleId;
+  loadMatrixDraft(roleId);
+  router();
+}
+function addMatrixDraftRow() {
+  const kpaId = document.getElementById("matrixAddKpaSelect").value;
+  if (!kpaId) return alert("No KPA selected (all KPAs may already be in this role, or none exist yet).");
+  _matrixDraft.rows.push({ id: uid("m"), roleId: _matrixRoleId, kpaId, weightagePct: 0 });
+  _matrixDirty = true;
+  router();
+}
+function removeMatrixDraftRow(i) {
+  _matrixDraft.rows.splice(i, 1);
+  _matrixDirty = true;
+  router();
+}
+function saveMatrixDraft() {
+  const total = _matrixDraft.rows.reduce((s, m) => s + (parseFloat(m.weightagePct) || 0), 0);
+  if (total !== 100) return alert("Weightages must sum to exactly 100% before saving.");
+  const others = DB.all("matrix").filter(m => m.roleId !== _matrixRoleId);
+  DB.save("matrix", [...others, ..._matrixDraft.rows]);
+  _matrixDirty = false;
+  router();
+}
+
+/* ============================= SCREEN: EMPLOYEES ============================= */
+
+function renderEmployees(app) {
+  const rows = DB.all("employees");
+  const byCode = {};
+  rows.forEach(r => { (byCode[r.empCode] = byCode[r.empCode] || []).push(r); });
+
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">Employees</h2>
+      <p class="screen-desc">One row per person per Role per KPA. All of one person's rows — regardless of role — must sum to 100% weightage.</p>
+      ${Object.keys(byCode).map(code => renderPersonBlock(code, byCode[code])).join("")}
+    </div>
+    <div class="card">
+      <h2 class="screen-title">Add a KPA row</h2>
+      <p class="screen-desc">Use this both to add a brand-new person's first row, or to add another KPA/role to an existing person (match their Employee Code).</p>
+      ${renderAddEmployeeRowForm()}
+    </div>`;
+}
+
+function renderPersonBlock(code, rows) {
+  const total = rows.reduce((s, r) => s + (parseFloat(r.weightagePct) || 0), 0);
+  return `
+    <div class="person-block">
+      <div class="person-head">
+        <div><b>${esc(rows[0].name)}</b> <span class="muted">(${esc(code)})</span></div>
+        <div>Total weightage: <span class="${total === 100 ? "total-ok" : "total-bad"}">${total}%</span> ${total === 100 ? "✓" : "✗ must equal 100%"}</div>
+      </div>
+      <table>
+        <thead><tr><th>Role</th><th>KPI ID</th><th>KPI Name</th><th>Weightage %</th><th>Dept</th><th>Office</th><th>Start</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${esc(roleName(r.roleId))}</td>
+              <td>${esc(r.kpaId)}</td>
+              <td>${esc(kpaName(r.kpaId))} <span class="muted">(${esc(kpaCode(r.kpaId))})</span></td>
+              <td><input type="number" step="any" value="${r.weightagePct}" onchange="updateEmployeeWeight('${r.id}', this.value)"></td>
+              <td>${esc(deptName(r.departmentId))}</td>
+              <td>${esc(r.officeCode)}</td>
+              <td>${esc(r.startDate)}</td>
+              <td><button class="danger small" onclick="deleteEmployeeRow('${r.id}')">Remove</button></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderAddEmployeeRowForm() {
+  const roles = DB.all("roles");
+  const depts = DB.all("departments");
+  const roleId = window._empFormRoleId || (roles[0] && roles[0].id) || "";
+  const matrixKpas = DB.all("matrix").filter(m => m.roleId === roleId);
+  return `
+    <div class="form-grid">
+      <div><label>Employee Code</label><input id="empCodeInput" placeholder="e.g. EMP1004"></div>
+      <div><label>Name</label><input id="empNameInput" placeholder="Full name"></div>
+      <div><label>Department</label>
+        <select id="empDeptInput">${depts.map(d => `<option value="${d.id}">${esc(d.name)}</option>`).join("")}</select>
+      </div>
+      <div><label>Office Code</label><input id="empOfficeInput" placeholder="e.g. RO-CHN"></div>
+      <div><label>Role</label>
+        <select id="empRoleInput" onchange="window._empFormRoleId=this.value; router();">
+          ${roles.map(r => `<option value="${r.id}" ${r.id === roleId ? "selected" : ""}>${esc(r.name)}</option>`).join("")}
+        </select>
+      </div>
+      <div><label>KPI Name (scoped to this role's Matrix)</label>
+        <select id="empKpaInput" onchange="autoFetchKpiId()">
+          ${matrixKpas.length === 0 ? `<option value="">— role has no KPAs in the Matrix yet —</option>` :
+            matrixKpas.map(m => `<option value="${m.kpaId}" data-weight="${m.weightagePct}">${esc(kpaName(m.kpaId))}</option>`).join("")}
+        </select>
+      </div>
+      <div><label>KPI ID (auto-fetched)</label><input id="empKpaIdDisplay" disabled value="${matrixKpas[0] ? matrixKpas[0].kpaId : ""}"></div>
+      <div><label>Weightage % (editable, pre-filled from Matrix)</label><input id="empWeightInput" type="number" step="any" value="${matrixKpas[0] ? matrixKpas[0].weightagePct : 0}"></div>
+      <div><label>Start Date</label><input id="empStartInput" type="date" value="${todayStr()}"></div>
+    </div>
+    <div style="margin-top:10px"><button class="primary" onclick="addEmployeeRow()">Add row</button></div>
+  `;
+}
+function autoFetchKpiId() {
+  const sel = document.getElementById("empKpaInput");
+  const opt = sel.options[sel.selectedIndex];
+  document.getElementById("empKpaIdDisplay").value = sel.value;
+  document.getElementById("empWeightInput").value = opt ? (opt.getAttribute("data-weight") || 0) : 0;
+}
+function addEmployeeRow() {
+  const empCode = document.getElementById("empCodeInput").value.trim();
+  const name = document.getElementById("empNameInput").value.trim();
+  const kpaId = document.getElementById("empKpaInput").value;
+  if (!empCode || !name) return alert("Employee Code and Name are required.");
+  if (!kpaId) return alert("No KPA available — add this role's KPAs to the Matrix first.");
+  DB.upsert("employees", {
+    id: uid("e"), empCode, name,
+    departmentId: document.getElementById("empDeptInput").value,
+    officeCode: document.getElementById("empOfficeInput").value.trim(),
+    roleId: document.getElementById("empRoleInput").value,
+    kpaId,
+    weightagePct: parseFloat(document.getElementById("empWeightInput").value) || 0,
+    startDate: document.getElementById("empStartInput").value,
+    endDate: null,
+  });
+  router();
+}
+function updateEmployeeWeight(id, val) {
+  const e = DB.find("employees", id); if (!e) return;
+  e.weightagePct = parseFloat(val) || 0;
+  DB.upsert("employees", e);
+  router();
+}
+function deleteEmployeeRow(id) {
+  if (!confirm("Remove this row?")) return;
+  DB.remove("employees", id); router();
+}
+
+/* ============================= SCREEN: TARGET FIXATION ============================= */
+
+function renderTargets(app) {
+  const employees = DB.all("employees");
+  const targets = DB.all("targets");
+  const waoAll = DB.all("wao");
+
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">Target Fixation</h2>
+      <p class="screen-desc">No acceptance step: the moment a target is saved here, it's live and its Work Allocation Order is created immediately.</p>
+      <div class="form-grid">
+        <div><label>Employee row (person + role + KPA)</label>
+          <select id="targetEmpInput">
+            ${employees.map(e => `<option value="${e.id}">${esc(empLabel(e))}</option>`).join("")}
+          </select>
+        </div>
+        <div><label>Period (YYYY-MM)</label><input id="targetPeriodInput" value="2026-07"></div>
+        <div><label>Target value</label><input id="targetValueInput" type="number" step="any"></div>
+        <div><label>Set by (authority)</label><input id="targetSetByInput" placeholder="e.g. RO Marketing Head"></div>
+      </div>
+      <div style="margin-top:10px"><button class="primary" onclick="addTarget()">Fix target (creates Work Allocation Order immediately)</button></div>
+    </div>
+    <div class="card">
+      <h2 class="screen-title">All targets</h2>
+      <table>
+        <thead><tr><th>Employee</th><th>Period</th><th>Target</th><th>Set by</th><th>Work Allocation Order status</th></tr></thead>
+        <tbody>
+          ${targets.slice().reverse().map(t => {
+            const wao = waoAll.find(w => w.employeeId === t.employeeId && w.period === t.period);
+            return `<tr>
+              <td>${esc(empLabel(empRow(t.employeeId)))}</td>
+              <td>${esc(t.period)}</td>
+              <td>${t.targetValue}</td>
+              <td>${esc(t.setBy)}</td>
+              <td>${wao ? statusBadge(wao.status) : "<span class='muted'>—</span>"}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+function addTarget() {
+  const employeeId = document.getElementById("targetEmpInput").value;
+  const period = document.getElementById("targetPeriodInput").value.trim();
+  const targetValue = parseFloat(document.getElementById("targetValueInput").value);
+  const setBy = document.getElementById("targetSetByInput").value.trim();
+  if (!employeeId || !period || isNaN(targetValue) || !setBy) return alert("All fields are required.");
+
+  const targetId = uid("t");
+  DB.upsert("targets", { id: targetId, employeeId, period, targetValue, setBy });
+
+  const emp = empRow(employeeId);
+  DB.upsert("wao", {
+    id: uid("w"), employeeId, period, targetValue,
+    weightagePct: emp ? emp.weightagePct : 0,
+    actualValue: null, submittedDate: null, mark: null,
+    acceptedBy: null, acceptedDate: null, status: "Pending Entry",
+  });
+  router();
+}
+
+/* ============================= SCREEN: WORKBENCH — ACTUAL ENTRY ============================= */
+
+function renderWorkbenchEntry(app) {
+  const rows = DB.all("wao").filter(w => w.status === "Pending Entry" || w.status === "Rejected");
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">Workbench — Actual Entry</h2>
+      <p class="screen-desc">The employee's own view: enter your actual performance value for each open Work Allocation Order.</p>
+      ${rows.length === 0 ? `<p class="muted">Nothing waiting on employee entry right now.</p>` : `
+      <table>
+        <thead><tr><th>Employee</th><th>KPA</th><th>Period</th><th>Target</th><th>Status</th><th>Actual value</th><th></th></tr></thead>
+        <tbody>
+          ${rows.map(w => {
+            const emp = empRow(w.employeeId);
+            return `<tr>
+              <td>${esc(emp ? emp.empCode + " — " + emp.name : "?")}</td>
+              <td>${esc(emp ? kpaName(emp.kpaId) : "?")}</td>
+              <td>${esc(w.period)}</td>
+              <td>${w.targetValue}</td>
+              <td>${statusBadge(w.status)}</td>
+              <td><input id="actualInput_${w.id}" type="number" step="any" value="${w.actualValue === null ? "" : w.actualValue}"></td>
+              <td><button class="primary small" onclick="submitActual('${w.id}')">Submit</button></td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>`}
+    </div>`;
+}
+function submitActual(waoId) {
+  const val = parseFloat(document.getElementById("actualInput_" + waoId).value);
+  if (isNaN(val)) return alert("Enter a numeric actual value.");
+  const w = DB.find("wao", waoId); if (!w) return;
+  w.actualValue = val;
+  w.submittedDate = todayStr();
+  w.status = "Submitted";
+  w.mark = null; // any previous mark is cleared on re-submit
+  DB.upsert("wao", w);
+  router();
+}
+
+/* ============================= SCREEN: WORKBENCH — REVIEW & MARK ============================= */
+
+function renderWorkbenchReview(app) {
+  const rows = DB.all("wao").filter(w => w.status === "Submitted");
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">Workbench — Review &amp; Mark</h2>
+      <p class="screen-desc">Accepting Authority's view. The band table is shown as a reference only — the mark is always a manual entry.</p>
+      ${rows.length === 0 ? `<p class="muted">Nothing waiting for review right now.</p>` : rows.map(w => renderReviewRow(w)).join("")}
+    </div>`;
+}
+function renderReviewRow(w) {
+  const emp = empRow(w.employeeId);
+  const kpa = emp ? kpaById(emp.kpaId) : null;
+  const suggestion = kpa ? MarkingScale.suggestedMark(kpa, w.targetValue, w.actualValue) : null;
+  return `
+    <div class="card" style="background:var(--grey-light)">
+      <b>${esc(emp ? emp.empCode + " — " + emp.name : "?")}</b> — ${esc(kpa ? kpa.name : "?")}
+      <span class="muted">(${esc(w.period)}, target ${w.targetValue}, actual ${w.actualValue})</span>
+      <table class="band-ref-table" style="margin-top:8px">
+        <thead><tr><th>Label</th><th>Min Δ</th><th>Max Δ</th><th>Mark</th></tr></thead>
+        <tbody>
+          ${kpa ? kpa.bands.map(b => `<tr><td>${esc(b.label)}</td><td>${b.minDelta === null ? "(open)" : b.minDelta}</td><td>${b.maxDelta === null ? "(open)" : b.maxDelta}</td><td>${b.mark}</td></tr>`).join("") : ""}
+        </tbody>
+      </table>
+      <p class="muted">Reference suggests: <b>${suggestion === null ? "no matching band" : suggestion}</b> — you are not required to use this.</p>
+      <div class="inline-form-row">
+        <div><label>Mark (manual entry)</label><input id="markInput_${w.id}" type="number" step="any" value="${suggestion === null ? "" : suggestion}"></div>
+        <div><label>Accepting authority</label><input id="acceptByInput_${w.id}" placeholder="e.g. RO Claims Head"></div>
+        <div style="flex:0"><button class="primary" onclick="acceptWao('${w.id}')">Accept</button></div>
+        <div style="flex:0"><button class="danger" onclick="rejectWao('${w.id}')">Reject</button></div>
+      </div>
+    </div>`;
+}
+function acceptWao(waoId) {
+  const mark = parseFloat(document.getElementById("markInput_" + waoId).value);
+  const acceptedBy = document.getElementById("acceptByInput_" + waoId).value.trim();
+  if (isNaN(mark) || !acceptedBy) return alert("Mark and Accepting Authority name are required.");
+  const w = DB.find("wao", waoId); if (!w) return;
+  w.mark = mark; w.acceptedBy = acceptedBy; w.acceptedDate = todayStr(); w.status = "Accepted";
+  DB.upsert("wao", w);
+  router();
+}
+function rejectWao(waoId) {
+  const w = DB.find("wao", waoId); if (!w) return;
+  w.status = "Rejected";
+  DB.upsert("wao", w);
+  router();
+}
+
+/* ============================= SCREEN: KPI SCORE DASHBOARD ============================= */
+
+function renderDashboard(app) {
+  const employees = DB.all("employees");
+  const codes = [...new Set(employees.map(e => e.empCode))];
+  const selectedCode = window._dashCode || codes[0];
+  const periods = [...new Set(DB.all("targets").map(t => t.period))];
+  const selectedPeriod = window._dashPeriod || periods[0] || "2026-07";
+
+  const personRows = employees.filter(e => e.empCode === selectedCode);
+  const waoAll = DB.all("wao");
+
+  let final = 0, scoredCount = 0;
+  const tableRows = personRows.map(row => {
+    const wao = waoAll.find(w => w.employeeId === row.id && w.period === selectedPeriod && w.status === "Accepted");
+    if (wao) {
+      const weighted = (wao.mark * wao.weightagePct) / 100;
+      final += weighted;
+      scoredCount++;
+      return { row, wao, weighted };
+    }
+    return { row, wao: null, weighted: null };
+  });
+
+  app.innerHTML = `
+    <div class="card">
+      <h2 class="screen-title">KPI Score Dashboard</h2>
+      <p class="screen-desc">Flat weighted sum of mark × weightage across a person's KPA-rows. Only counts Work Allocation Orders with status Accepted.</p>
+      <div class="inline-form-row">
+        <div><label>Employee</label>
+          <select onchange="window._dashCode=this.value; router();">
+            ${codes.map(c => {
+              const n = employees.find(e => e.empCode === c).name;
+              return `<option value="${c}" ${c === selectedCode ? "selected" : ""}>${esc(c)} — ${esc(n)}</option>`;
+            }).join("")}
+          </select>
+        </div>
+        <div><label>Period</label><input value="${esc(selectedPeriod)}" onchange="window._dashPeriod=this.value; router();"></div>
+      </div>
+      <hr class="section-divider">
+      <table>
+        <thead><tr><th>KPA (via role)</th><th>Weightage</th><th>Actual</th><th>Mark</th><th>Weighted</th></tr></thead>
+        <tbody>
+          ${tableRows.map(({ row, wao, weighted }) => `
+            <tr>
+              <td>${esc(kpaName(row.kpaId))} <span class="muted">(${esc(roleName(row.roleId))})</span></td>
+              <td>${row.weightagePct}%</td>
+              <td>${wao && wao.actualValue !== null ? wao.actualValue : `<span class="muted">— not yet entered/accepted</span>`}</td>
+              <td>${wao ? wao.mark : "—"}</td>
+              <td>${weighted === null ? "—" : weighted.toFixed(1)}</td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+      <div class="score-final">
+        <div>
+          <div style="font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--slate-500)">Final KPI Score</div>
+          <div>${final.toFixed(1)}<span style="font-size:14px;font-weight:600;color:var(--slate-500)"> / 100</span></div>
+        </div>
+        ${scoredCount < personRows.length ? `<span class="score-note">Partial — ${scoredCount} of ${personRows.length} KPAs scored</span>` : `<span class="badge accepted">Complete</span>`}
+      </div>
+    </div>`;
+}
+</script>
