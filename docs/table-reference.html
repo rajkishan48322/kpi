@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KPI Workbench — Database Table Reference</title>
+<style>
+  @page { size: A4; margin: 20mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Georgia", "Cambria", serif;
+    color: #14202f;
+    font-size: 11.5pt;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .title-block {
+    border-bottom: 2px solid #0c2340;
+    padding-bottom: 10pt;
+    margin-bottom: 18pt;
+  }
+  .eyebrow {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 9pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7684;
+    margin: 0 0 4pt;
+  }
+  h1 {
+    font-size: 20pt;
+    margin: 0 0 4pt;
+    color: #0c2340;
+  }
+  .subtitle {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 10pt;
+    color: #6b7684;
+    margin: 0;
+  }
+  h2 {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 14pt;
+    color: #0c2340;
+    border-left: 4px solid #b8862f;
+    padding-left: 8pt;
+    margin: 22pt 0 3pt;
+    page-break-after: avoid;
+  }
+  .table-desc {
+    font-size: 10pt;
+    color: #444;
+    margin: 0 0 8pt;
+  }
+  h3 {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 9.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7684;
+    margin: 10pt 0 4pt;
+    page-break-after: avoid;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.7pt;
+    margin-bottom: 4pt;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #c7cdd6;
+    padding: 4pt 7pt;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #eef1f6;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-weight: 700;
+    font-size: 8.7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #38424f;
+  }
+  td.pk { color: #8a611f; font-weight: 700; font-family: "Helvetica", "Arial", sans-serif; font-size: 8.3pt; }
+  td.fk { color: #2a5490; font-weight: 700; font-family: "Helvetica", "Arial", sans-serif; font-size: 8.3pt; }
+  td.mono { font-family: "Courier New", monospace; font-size: 9.3pt; }
+  .example-note {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 8.3pt;
+    font-style: italic;
+    color: #a8710a;
+    margin: 0 0 3pt;
+  }
+  .rule-note {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 9.5pt;
+    background: #fdf3e0;
+    border-left: 3px solid #a8710a;
+    padding: 6pt 9pt;
+    margin: 8pt 0 4pt;
+  }
+  .rule-note b { color: #8a611f; }
+  section { page-break-inside: avoid; }
+  footer {
+    margin-top: 26pt;
+    padding-top: 8pt;
+    border-top: 1px solid #c7cdd6;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 8pt;
+    color: #8a95a8;
+  }
+</style>
+</head>
+<body>
+
+  <div class="title-block">
+    <p class="eyebrow">United India Insurance Co. Ltd. &middot; KPI Approach</p>
+    <h1>KPI Workbench — Database Table Reference</h1>
+    <p class="subtitle">Departments &middot; Roles &middot; KPAs &middot; KPA Bands &middot; Employees — generated 2026-09-16</p>
+  </div>
+
+  <!-- ============================= DEPARTMENTS ============================= -->
+  <section>
+    <h2>1. Departments</h2>
+    <p class="table-desc">A simple controlled list — used everywhere else instead of free-text department names.</p>
+
+    <h3>Structure</h3>
+    <table>
+      <thead><tr><th style="width:16%">Column</th><th style="width:16%">Type</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">id</td><td class="mono">bigint</td><td><span class="pk">PRIMARY KEY</span> — auto-generated, never supplied by hand</td></tr>
+        <tr><td class="mono">name</td><td class="mono">text</td><td><b>NOT NULL, UNIQUE</b> — required; no two departments may share a name</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Example data</h3>
+    <p class="example-note">Illustrative only — the live database starts empty; these rows are examples for this document, not stored data.</p>
+    <table>
+      <thead><tr><th style="width:16%">id</th><th>name</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>Marketing</td></tr>
+        <tr><td class="mono">2</td><td>Claims</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================= ROLES ============================= -->
+  <section>
+    <h2>2. Roles</h2>
+    <p class="table-desc">Job types, e.g. Marketing Officer, Claims Officer.</p>
+
+    <h3>Structure</h3>
+    <table>
+      <thead><tr><th style="width:16%">Column</th><th style="width:16%">Type</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">id</td><td class="mono">bigint</td><td><span class="pk">PRIMARY KEY</span></td></tr>
+        <tr><td class="mono">name</td><td class="mono">text</td><td><b>NOT NULL</b></td></tr>
+        <tr><td class="mono">type</td><td class="mono">text</td><td><b>NOT NULL, CHECK</b> — must be exactly <code>'Fixed'</code> or <code>'Tailor-made'</code></td></tr>
+        <tr><td class="mono">description</td><td class="mono">text</td><td>optional</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Example data</h3>
+    <p class="example-note">Illustrative only.</p>
+    <table>
+      <thead><tr><th style="width:8%">id</th><th style="width:22%">name</th><th style="width:16%">type</th><th>description</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>Marketing Officer</td><td>Fixed</td><td>Handles business development, premium growth targets.</td></tr>
+        <tr><td class="mono">2</td><td>Claims Officer</td><td>Fixed</td><td>Handles claim settlement and turnaround time.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================= KPAS ============================= -->
+  <section>
+    <h2>3. KPAs (KPI parameters)</h2>
+    <p class="table-desc">The measurable things themselves — Premium Growth %, Claims TAT, etc.</p>
+
+    <h3>Structure</h3>
+    <table>
+      <thead><tr><th style="width:16%">Column</th><th style="width:16%">Type</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">id</td><td class="mono">bigint</td><td><span class="pk">PRIMARY KEY</span></td></tr>
+        <tr><td class="mono">code</td><td class="mono">text</td><td><b>NOT NULL, UNIQUE</b> — e.g. <code>KPI-001</code></td></tr>
+        <tr><td class="mono">name</td><td class="mono">text</td><td><b>NOT NULL</b></td></tr>
+        <tr><td class="mono">definition</td><td class="mono">text</td><td>optional — the formula/description</td></tr>
+        <tr><td class="mono">unit</td><td class="mono">text</td><td>optional — <code>%</code>, <code>days</code>, etc.</td></tr>
+        <tr><td class="mono">direction</td><td class="mono">text</td><td><b>NOT NULL, CHECK</b> — <code>'higher-better'</code> or <code>'lower-better'</code></td></tr>
+        <tr><td class="mono">source</td><td class="mono">text</td><td><b>NOT NULL, CHECK</b> — <code>'GC'</code>, <code>'WB'</code>, or <code>'Manual'</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Example data</h3>
+    <p class="example-note">Illustrative only.</p>
+    <table>
+      <thead><tr><th style="width:6%">id</th><th style="width:11%">code</th><th style="width:20%">name</th><th style="width:8%">unit</th><th style="width:16%">direction</th><th>source</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td class="mono">KPI-001</td><td>Premium Growth %</td><td class="mono">%</td><td>higher-better</td><td class="mono">GC</td></tr>
+        <tr><td class="mono">2</td><td class="mono">KPI-002</td><td>Average OD Claims TAT</td><td class="mono">days</td><td>lower-better</td><td class="mono">WB</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================= KPA_BANDS ============================= -->
+  <section>
+    <h2>4. KPA Bands</h2>
+    <p class="table-desc">The marking-scale rows belonging to one KPA — reference only, never auto-applied to a real mark.</p>
+
+    <h3>Structure</h3>
+    <table>
+      <thead><tr><th style="width:16%">Column</th><th style="width:16%">Type</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">id</td><td class="mono">bigint</td><td><span class="pk">PRIMARY KEY</span></td></tr>
+        <tr><td class="mono">kpa_id</td><td class="mono">bigint</td><td><span class="fk">FOREIGN KEY</span> → kpas.id, <b>NOT NULL</b>, <code>ON DELETE CASCADE</code></td></tr>
+        <tr><td class="mono">label</td><td class="mono">text</td><td><b>NOT NULL</b> — e.g. "At Target"</td></tr>
+        <tr><td class="mono">min_delta</td><td class="mono">numeric</td><td>nullable — <code>NULL</code> means open-ended floor</td></tr>
+        <tr><td class="mono">max_delta</td><td class="mono">numeric</td><td>nullable — <code>NULL</code> means open-ended ceiling</td></tr>
+        <tr><td class="mono">mark</td><td class="mono">numeric</td><td><b>NOT NULL</b></td></tr>
+        <tr><td class="mono">sort_order</td><td class="mono">int</td><td><b>NOT NULL</b>, defaults to <code>0</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="rule-note">
+      <b>Dependency:</b> the parent KPA (<code>kpa_id</code>) must already exist — this is a child table.
+      If the parent KPA is deleted, its bands are deleted automatically (<code>CASCADE</code>).
+    </div>
+
+    <h3>Example data</h3>
+    <p class="example-note">Illustrative only — bands for KPI-001 (Premium Growth %, higher-better).</p>
+    <table>
+      <thead><tr><th style="width:6%">id</th><th style="width:8%">kpa_id</th><th style="width:20%">label</th><th style="width:12%">min_delta</th><th style="width:12%">max_delta</th><th>mark</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td class="mono">1</td><td>At Target</td><td class="mono">0</td><td class="mono">0</td><td class="mono">90</td></tr>
+        <tr><td class="mono">2</td><td class="mono">1</td><td>Slightly below</td><td class="mono">&minus;1</td><td class="mono">&minus;0.01</td><td class="mono">80</td></tr>
+        <tr><td class="mono">3</td><td class="mono">1</td><td>Well above (ceiling)</td><td class="mono">1.01</td><td class="mono">(open)</td><td class="mono">100</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================= EMPLOYEES ============================= -->
+  <section>
+    <h2>5. Employees</h2>
+    <p class="table-desc">The central "hub" table — one row per <b>person + role + KPA</b> combination, not one row per person.</p>
+
+    <h3>Structure</h3>
+    <table>
+      <thead><tr><th style="width:16%">Column</th><th style="width:16%">Type</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">id</td><td class="mono">bigint</td><td><span class="pk">PRIMARY KEY</span></td></tr>
+        <tr><td class="mono">emp_code</td><td class="mono">text</td><td><b>NOT NULL</b> — e.g. <code>EMP1001</code>; not unique alone, since one person has multiple rows</td></tr>
+        <tr><td class="mono">name</td><td class="mono">text</td><td><b>NOT NULL</b></td></tr>
+        <tr><td class="mono">department_id</td><td class="mono">bigint</td><td><span class="fk">FOREIGN KEY</span> → departments.id, nullable (optional)</td></tr>
+        <tr><td class="mono">office_code</td><td class="mono">text</td><td>optional</td></tr>
+        <tr><td class="mono">role_id</td><td class="mono">bigint</td><td><span class="fk">FOREIGN KEY</span> → roles.id, <b>NOT NULL</b></td></tr>
+        <tr><td class="mono">kpa_id</td><td class="mono">bigint</td><td><span class="fk">FOREIGN KEY</span> → kpas.id, <b>NOT NULL</b></td></tr>
+        <tr><td class="mono">weightage_pct</td><td class="mono">numeric</td><td><b>NOT NULL, CHECK</b> — between 0 and 100</td></tr>
+        <tr><td class="mono">start_date</td><td class="mono">date</td><td><b>NOT NULL</b></td></tr>
+        <tr><td class="mono">end_date</td><td class="mono">date</td><td>optional</td></tr>
+      </tbody>
+    </table>
+
+    <div class="rule-note">
+      <b>Table-level:</b> <code>UNIQUE (emp_code, role_id, kpa_id)</code> — the same person can't have two identical role + KPA rows.<br>
+      <b>Trigger-enforced (not a plain constraint):</b> every row sharing one <code>emp_code</code> — across
+      <i>all</i> their roles — must have <code>weightage_pct</code> values that sum to exactly <b>100</b>.
+      Enforced by <code>fn_check_employee_weightage_sum()</code>, fired as a deferred constraint trigger: insert
+      all of a person's rows in one transaction, or keep an existing row's percentage corrected so the running
+      total is always 100 after each statement. An unbalanced total raises an error such as
+      <i>"Employee EMP1001 KPA weightages must sum to 100 across all roles (currently 80)"</i>.
+    </div>
+
+    <h3>Example data</h3>
+    <p class="example-note">Illustrative only — two rows for one person (A. Sharma), correctly summing to 100%.</p>
+    <table>
+      <thead><tr><th style="width:5%">id</th><th style="width:12%">emp_code</th><th style="width:14%">name</th><th style="width:10%">role_id</th><th style="width:10%">kpa_id</th><th style="width:12%">weightage_pct</th><th>start_date</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td class="mono">EMP1001</td><td>A. Sharma</td><td class="mono">1</td><td class="mono">1</td><td class="mono">60</td><td class="mono">2026-04-01</td></tr>
+        <tr><td class="mono">2</td><td class="mono">EMP1001</td><td>A. Sharma</td><td class="mono">1</td><td class="mono">2</td><td class="mono">40</td><td class="mono">2026-04-01</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    Source: <code>C:\Users\Administrator\kpi\schema.sql</code> — KPI Workbench, United India Insurance Co. Ltd.
+    Example rows on this page are illustrative only; the live <code>kpi</code> database contains no seed data.
+  </footer>
+
+</body>
+</html>
